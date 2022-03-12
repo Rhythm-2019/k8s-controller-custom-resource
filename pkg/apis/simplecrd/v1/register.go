@@ -28,8 +28,8 @@ var SchemeGroupVersion = &schema.GroupVersion{
 }
 
 var (
-    SchemaBuilder = runtime.NewSchemeBuilder(addKnownTypes)
-    AddToSchema = SchemaBuilder.AddToScheme
+    SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
+    AddToScheme   = SchemeBuilder.AddToScheme
 )
 
 func Resource(resource string) schema.GroupResource {
@@ -43,12 +43,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 
     scheme.AddKnownTypes(
         *SchemeGroupVersion,
-        Network{},
-        NetworkList{},
+        &Network{},
+        &NetworkList{},
     )
 
     metav1.AddToGroupVersion(scheme, *SchemeGroupVersion)
     return nil
-
-
 }
