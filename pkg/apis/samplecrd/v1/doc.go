@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package simplecrd
-
-const (
-    GroupNmae = "simplecrd.k8s.io"
-    Version = "v1"
-)
+// +k8s:deepcopy-gen=package
+// +groupName=samplecrd.k8s.io
+package v1

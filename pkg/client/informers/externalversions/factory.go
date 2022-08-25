@@ -171,9 +171,9 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
-	Simplecrd() simplecrd.Interface
+	Samplecrd() simplecrd.Interface
 }
 
-func (f *sharedInformerFactory) Simplecrd() simplecrd.Interface {
+func (f *sharedInformerFactory) Samplecrd() simplecrd.Interface {
 	return simplecrd.New(f, f.namespace, f.tweakListOptions)
 }

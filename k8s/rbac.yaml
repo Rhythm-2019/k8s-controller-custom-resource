@@ -1,0 +1,34 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: network-reader
+  namespace: default
+rules:
+  - apiGroups: ["samplecrd.k8s.io"] # "" indicates the core API group
+    resources: ["networks"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["*"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: network-role-binding
+subjects:
+  - kind: ServiceAccount
+    namespace: default
+    name: network-service-account
+roleRef:
+  kind: Role
+  name: network-reader
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: network-service-account
+  namespace: default
+

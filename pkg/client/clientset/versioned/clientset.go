@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"net/http"
 
-	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1"
+	samplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -29,19 +29,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	SimplecrdV1() simplecrdv1.SimplecrdV1Interface
+	SamplecrdV1() samplecrdv1.SamplecrdV1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	simplecrdV1 *simplecrdv1.SimplecrdV1Client
+	samplecrdV1 *samplecrdv1.SamplecrdV1Client
 }
 
-// SimplecrdV1 retrieves the SimplecrdV1Client
-func (c *Clientset) SimplecrdV1() simplecrdv1.SimplecrdV1Interface {
-	return c.simplecrdV1
+// SamplecrdV1 retrieves the SamplecrdV1Client
+func (c *Clientset) SamplecrdV1() samplecrdv1.SamplecrdV1Interface {
+	return c.samplecrdV1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -84,7 +84,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.simplecrdV1, err = simplecrdv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.samplecrdV1, err = samplecrdv1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.simplecrdV1 = simplecrdv1.New(c)
+	cs.samplecrdV1 = samplecrdv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

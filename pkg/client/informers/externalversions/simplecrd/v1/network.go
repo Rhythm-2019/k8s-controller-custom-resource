@@ -21,7 +21,7 @@ import (
 	"context"
 	time "time"
 
-	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/simplecrd/v1"
+	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	versioned "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned"
 	internalinterfaces "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/informers/externalversions/internalinterfaces"
 	v1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/listers/simplecrd/v1"
@@ -61,13 +61,13 @@ func NewFilteredNetworkInformer(client versioned.Interface, namespace string, re
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SimplecrdV1().Networks(namespace).List(context.TODO(), options)
+				return client.SamplecrdV1().Networks(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SimplecrdV1().Networks(namespace).Watch(context.TODO(), options)
+				return client.SamplecrdV1().Networks(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&simplecrdv1.Network{},

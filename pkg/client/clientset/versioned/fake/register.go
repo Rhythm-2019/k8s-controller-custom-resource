@@ -18,7 +18,7 @@ limitations under the License.
 package fake
 
 import (
-	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/simplecrd/v1"
+	samplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -30,7 +30,7 @@ var scheme = runtime.NewScheme()
 var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
-	simplecrdv1.AddToScheme,
+	samplecrdv1.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition

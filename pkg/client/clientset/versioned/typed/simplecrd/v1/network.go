@@ -21,7 +21,7 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/simplecrd/v1"
+	v1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	scheme "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -55,7 +55,7 @@ type networks struct {
 }
 
 // newNetworks returns a Networks
-func newNetworks(c *SimplecrdV1Client, namespace string) *networks {
+func newNetworks(c *SamplecrdV1Client, namespace string) *networks {
 	return &networks{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -20,7 +20,7 @@ package externalversions
 import (
 	"fmt"
 
-	v1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/simplecrd/v1"
+	v1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 )
@@ -51,9 +51,9 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=simplecrd.k8s.io, Version=v1
+	// Group=samplecrd.k8s.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("networks"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Simplecrd().V1().Networks().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Samplecrd().V1().Networks().Informer()}, nil
 
 	}
 

@@ -19,8 +19,8 @@ package fake
 
 import (
 	clientset "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned"
-	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1"
-	fakesimplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1/fake"
+	samplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1"
+	fakesamplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned/typed/simplecrd/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -78,7 +78,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// SimplecrdV1 retrieves the SimplecrdV1Client
-func (c *Clientset) SimplecrdV1() simplecrdv1.SimplecrdV1Interface {
-	return &fakesimplecrdv1.FakeSimplecrdV1{Fake: &c.Fake}
+// SamplecrdV1 retrieves the SamplecrdV1Client
+func (c *Clientset) SamplecrdV1() samplecrdv1.SamplecrdV1Interface {
+	return &fakesamplecrdv1.FakeSamplecrdV1{Fake: &c.Fake}
 }

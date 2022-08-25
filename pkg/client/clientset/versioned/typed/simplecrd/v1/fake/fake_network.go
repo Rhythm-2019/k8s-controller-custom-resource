@@ -20,7 +20,7 @@ package fake
 import (
 	"context"
 
-	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/simplecrd/v1"
+	simplecrdv1 "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -31,13 +31,13 @@ import (
 
 // FakeNetworks implements NetworkInterface
 type FakeNetworks struct {
-	Fake *FakeSimplecrdV1
+	Fake *FakeSamplecrdV1
 	ns   string
 }
 
-var networksResource = schema.GroupVersionResource{Group: "simplecrd.k8s.io", Version: "v1", Resource: "networks"}
+var networksResource = schema.GroupVersionResource{Group: "samplecrd.k8s.io", Version: "v1", Resource: "networks"}
 
-var networksKind = schema.GroupVersionKind{Group: "simplecrd.k8s.io", Version: "v1", Kind: "Network"}
+var networksKind = schema.GroupVersionKind{Group: "samplecrd.k8s.io", Version: "v1", Kind: "Network"}
 
 // Get takes name of the network, and returns the corresponding network object, and an error if there is any.
 func (c *FakeNetworks) Get(ctx context.Context, name string, options v1.GetOptions) (result *simplecrdv1.Network, err error) {

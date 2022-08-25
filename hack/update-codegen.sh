@@ -18,6 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+# modify follow env var
 KUBENETES_VERSION="1.17.5"
 BASE_PACKAGE="github.com/Rhythm-2019/k8s-controller-custom-resource"
 GENERATORS="all"

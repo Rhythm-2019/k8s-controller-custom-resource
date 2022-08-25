@@ -16,54 +16,58 @@ limitations under the License.
 package main
 
 import (
-    "flag"
-    clientset "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned"
-    informers "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/informers/externalversions"
-    "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/signals"
-    "github.com/golang/glog"
-    utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-    "k8s.io/client-go/kubernetes"
-    "k8s.io/client-go/tools/clientcmd"
-    "time"
+	"flag"
+	clientset "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/clientset/versioned"
+	informers "github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/client/informers/externalversions"
+	"github.com/Rhythm-2019/k8s-controller-custom-resource/pkg/signals"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/klog/v2"
+	"time"
 )
 
 var (
-    MasterUrl string
-    Kubeconfig string
+	MasterUrl  string
+	Kubeconfig string
 )
+
 func init() {
-    flag.StringVar(&Kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
-    flag.StringVar(&MasterUrl, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
+	flag.StringVar(&Kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
+	flag.StringVar(&MasterUrl, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
 }
 
 func main() {
-    flag.Parse()
+	flag.Parse()
 
-    stopCh := signals.SetupSignalHandler()
+	stopCh := signals.SetupSignalHandler()
 
-    cfg, err := clientcmd.BuildConfigFromFlags(MasterUrl, Kubeconfig)
-    if err != nil {
-        glog.Fatalf("Error to build config from flags, detail is %v", err)
-    }
+	klog.Infof("controller boot...")
 
-    kubeClientSet, err := kubernetes.NewForConfig(cfg)
-    if err != nil {
-        glog.Fatalf("Error to create kube client, detail is %v", err)
-    }
-    networkClientSet, err := clientset.NewForConfig(cfg)
-    if err != nil {
-        glog.Fatalf("Error to create network client, detail is %v", err)
-    }
+	// 从 InClusterConfig 中获取配置
+	cfg, err := clientcmd.BuildConfigFromFlags(MasterUrl, Kubeconfig)
+	if err != nil {
+		klog.Fatalf("Error to build config from flags, detail is %v", err)
+	}
 
+	// 可用于创建获取 kubenetes 中其他 API 资源的 informer，比如监听 Pod
+	kubeClientSet, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		klog.Fatalf("Error to create kube client, detail is %v", err)
+	}
+	// 创建 CRD 后可以通过 RestAPI 获取资源信息，networkClient 封装了这些操作
+	networkClientSet, err := clientset.NewForConfig(cfg)
+	if err != nil {
+		klog.Fatalf("Error to create network client, detail is %v", err)
+	}
 
-    informerFactory := informers.NewSharedInformerFactory(networkClientSet, 10*time.Second)
+	// informer 工厂，用于创建 informer，informer 是带有缓存、用于监听资源变化的客户端
+	informerFactory := informers.NewSharedInformerFactoryWithOptions(networkClientSet, 10*time.Second, informers.WithNamespace("default"))
+	// Conrtoller 通过控制循环获取资源变更信息，并将实际状态转换到期望状态
+	controller := NewController(kubeClientSet, networkClientSet, informerFactory.Samplecrd().V1().Networks())
 
-    controller := NewController(kubeClientSet, networkClientSet, informerFactory.Simplecrd().V1().Networks())
-
-    go informerFactory.Start(stopCh)
-    if err := controller.Run(2, stopCh); err != nil {
-        utilruntime.HandleError(err)
-    }
+	go informerFactory.Start(stopCh)
+	if err := controller.Run(2, stopCh); err != nil {
+		utilruntime.HandleError(err)
+	}
 }
-
-
